@@ -1,0 +1,11 @@
+# Public endpoints and their expected status (verified 2026-10-21).
+# Used by AT-001 to prove renovation did not regress public sites.
+endpoints:
+  - name: slicklab-apex
+    url: https://slicklab.digital/
+    expected_status: 200
+    critical: true
+  - name: tcc-console
+    url: https://slicklab.digital/tcc/
+    expected_status: 401        # auth-protected by design
+    critical: true

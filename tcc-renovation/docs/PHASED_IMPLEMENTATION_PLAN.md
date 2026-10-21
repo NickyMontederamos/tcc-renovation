@@ -80,18 +80,27 @@ Execute each item as an independent change:
 
 ## P4 - TCC data foundation
 
-### Objective
-Introduce isolated governance schemas without touching existing app schemas.
+> **Status 2026-10-21: ALREADY LIVE.** The TCC data foundation is deployed in the `public`
+> schema of db `tcc` (container `deploy-postgres-1`, pgvector/pgvector:pg16), owned by
+> **Alembic** at head `0010_promotions`. It is a flat `public` design — NOT `tcc_*` namespaced
+> schemas. An earlier scaffold draft proposed `tcc_*` schemas; that conflicts with the deployed
+> system and must not be applied. `schemas/sql/001_tcc_schemas_up.sql` is now a REFERENCE MIRROR
+> of the live schema (idempotent, safe no-op on prod, used to seed CI/staging only).
 
-### Build
-- Schemas: `tcc_control`, `tcc_registry`, `tcc_evidence`, `tcc_policy`, `tcc_audit`.
-- Tables for agents, machines, capabilities, services, models, missions, jobs, dependencies, artifacts, evidence, claims, approvals, policy decisions, audit events, and health observations.
-- Forward and rollback migrations.
+### Live tables (data contract)
+`tasks`, `task_events`, `task_artifacts`, `registry_entities`, `audit_events`, `identities`,
+`memory_records`, `memory_candidates` (pgvector), `rag_sources`, `agent_profiles`, `skills`,
+`evidence_items`, `validation_runs`, `mcp_tools`, `mcp_call_log`, `promotion_records`.
+
+### Remaining work (validate & reconcile, not re-create)
+- Keep `schemas/sql/001_tcc_schemas_up.sql` in sync with Alembic head as the readable contract.
+- Any new table/column ships as a new **Alembic** migration in `/root/tcc`, never via this file.
+- Schema changes follow RB-006 (Alembic downgrade + verified backup), never a `public` drop.
 
 ### Exit gate
-- Migrations pass in staging and rollback cleanly.
-- No objects outside TCC schemas change.
-- Every mutation writes an audit event.
+- Reference mirror matches Alembic head; applying it to an empty staging DB reproduces the schema.
+- No `public` object is dropped to force rollback.
+- Every governed mutation writes an `audit_events` row (already enforced live).
 
 ## P5 - Worker enrollment and scheduler
 

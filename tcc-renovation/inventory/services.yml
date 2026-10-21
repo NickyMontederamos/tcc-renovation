@@ -1,26 +1,155 @@
+# Live SlickLab control-plane services (observed 2026-10-21, read-only).
+# desired_replicas = singleton expectation. Each service declares ONE `check`:
+#   {container: <name>} | {port: <tcp>} | {process: <pattern>}
+# chosen as the most reliable signal for that service. Secrets never appear here.
 services:
-  hermes-gateway:
+  # --- TCC governance core (db `tcc`, Alembic head 0010_promotions, API v0.11.0) ---
+  tcc-api:
+    owner: tcc-runtime
+    placement: slicklab-vps
+    endpoint: http://127.0.0.1:8100/health
+    desired_replicas: 1
+    critical: true
+    check: {container: deploy-tcc-1}
+  tcc-postgres:
+    owner: tcc-runtime
+    placement: slicklab-vps          # pgvector/pgvector:pg16 — AUTHORITATIVE store
+    desired_replicas: 1
+    critical: true
+    check: {container: deploy-postgres-1}
+  tcc-litellm:
     owner: tcc-runtime
     placement: slicklab-vps
     desired_replicas: 1
     critical: true
-  slicklab-site-mcp:
-    owner: tcc-capability-registry
-    placement: slicklab-vps
+    check: {container: deploy-litellm-1}
+  tcc-caddy:
+    owner: tcc-runtime
+    placement: slicklab-vps          # fronts tcc-api on 127.0.0.1:8100
     desired_replicas: 1
     critical: true
+    check: {container: deploy-caddy-1}
+
+  # --- Hermes / COLNEX runtime ---
+  hermes-gateway:
+    owner: tcc-runtime
+    placement: slicklab-vps          # a2a :9900, tailnet :9119
+    desired_replicas: 1
+    critical: true
+    check: {port: 9900}
   hermes-rag-bridge:
     owner: tcc-knowledge
+    placement: slicklab-vps          # approved-only, nomic-embed-text 768d
+    desired_replicas: 1
+    critical: true
+    check: {port: 8765}
+  tcc-observer:
+    owner: tcc-runtime
+    placement: slicklab-vps          # read-only observer
+    desired_replicas: 1
+    critical: false
+    check: {port: 8770}
+  colnex-api:
+    owner: tcc-orchestration
     placement: slicklab-vps
     desired_replicas: 1
     critical: true
-  browser-controller:
-    owner: tcc-browser
+    check: {port: 8001}
+  colnex-chat:
+    owner: tcc-orchestration
+    placement: slicklab-vps          # chainlit
+    desired_replicas: 1
+    critical: false
+    check: {port: 8000}
+  colnex-mcp-bridge:
+    owner: tcc-mcp
+    placement: slicklab-vps          # governed-MCP enforcement point (P6)
+    desired_replicas: 1
+    critical: true
+    check: {port: 9090}
+
+  # --- SlickLab application services ---
+  slicklab-control:
+    owner: slicklab-site
+    placement: slicklab-vps          # 401 expected (auth-protected)
+    desired_replicas: 1
+    critical: true
+    check: {port: 8090}
+  slicklab-voice-bridge:
+    owner: slicklab-site
     placement: slicklab-vps
     desired_replicas: 1
     critical: false
+    check: {port: 3000}
+  slicklab-telegram-bot:
+    owner: slicklab-site
+    placement: slicklab-vps
+    desired_replicas: 1
+    critical: false
+    check: {port: 8766}
+  slicklab-beacon:
+    owner: slicklab-site
+    placement: slicklab-vps
+    desired_replicas: 1
+    critical: false
+    check: {port: 8077}
+  slicklab-browser-agent:
+    owner: slicklab-site
+    placement: slicklab-vps          # P3/P8 candidate to move to a worker
+    desired_replicas: 1
+    critical: false
+    check: {port: 8091}
+  clipforge:
+    owner: slicklab-site
+    placement: slicklab-vps
+    desired_replicas: 1
+    critical: false
+    check: {port: 8768}
+  gmail-dashboard:
+    owner: slicklab-site
+    placement: slicklab-vps          # bound on tailnet
+    desired_replicas: 1
+    critical: false
+    check: {port: 8767}
+  growth-api:
+    owner: slicklab-growth
+    placement: slicklab-vps
+    desired_replicas: 1
+    critical: false
+    check: {container: slicklab-growth-api}
+  leads-api:
+    owner: slicklab-leads
+    placement: slicklab-vps
+    desired_replicas: 1
+    critical: false
+    check: {container: leads-api-1}
+
+  # --- Shared infrastructure ---
+  nginx:
+    owner: platform
+    placement: slicklab-vps
+    desired_replicas: 1              # one listener on :443
+    critical: true
+    check: {port: 443}
+  mariadb:
+    owner: platform
+    placement: slicklab-vps
+    desired_replicas: 1
+    critical: true
+    check: {port: 3306}
+
+  # --- P3 stabilization target: local inference ---
+  local-inference:
+    owner: tcc-runtime
+    placement: slicklab-vps          # CHG-007: move or cap (swap/load pressure)
+    desired_replicas: 1
+    critical: false
+    check: {port: 8081}
+
+  # --- Worker-only capabilities (NOT scheduled on the VPS) ---
   rea-worker:
     owner: tcc-software-intelligence
     placement: worker-only
     desired_replicas: 0
     critical: false
+    check: {container: rea-worker}   # expected absent on the control plane

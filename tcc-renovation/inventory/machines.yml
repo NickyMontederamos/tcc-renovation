@@ -1,0 +1,24 @@
+# Machine inventory (observed 2026-10-21). Workers are DECLARED, not enrolled:
+# scheduling_enabled stays false until P5 enrollment is approved (ADR-0001).
+machines:
+  slicklab-vps:
+    host: vmi3585023.contaboserver.net
+    public_ip: 173.249.26.61
+    os: Ubuntu 24.04.5 LTS
+    capacity: {vcpu: 6, ram_gib: 11}
+    role: [control-plane, database, web, mail, gateway]
+    scheduling_enabled: false
+    # Control plane MUST NOT run these — pushed to workers (CLAUDE.md):
+    prohibited_capabilities: [unknown-binary-execution, heavy-rea, large-local-model, browser-at-scale]
+    notes: >
+      Authoritative PostgreSQL (deploy-postgres-1, pgvector). Under swap/load pressure
+      at 2026-10-21 baseline — P3 stabilization target.
+  goldenlegacy:
+    role: [compute, browser, coding, rea, inference]
+    scheduling_enabled: false        # P5, not authorized yet
+  bobsicles:
+    role: [compute, verification, browser, coding, rea, inference]
+    scheduling_enabled: false        # P5, not authorized yet
+  o9yown:
+    role: [unclassified]
+    scheduling_enabled: false        # resolve classification before any enrollment
