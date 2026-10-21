@@ -1,0 +1,9 @@
+endpoints:
+  - name: slicklab-home
+    url: https://slicklab.digital/
+    expected_status: 200
+    critical: true
+  - name: slicklab-control
+    url: https://control.slicklab.digital/
+    expected_status: 401
+    critical: true

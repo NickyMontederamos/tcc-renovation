@@ -1,0 +1,26 @@
+services:
+  hermes-gateway:
+    owner: tcc-runtime
+    placement: slicklab-vps
+    desired_replicas: 1
+    critical: true
+  slicklab-site-mcp:
+    owner: tcc-capability-registry
+    placement: slicklab-vps
+    desired_replicas: 1
+    critical: true
+  hermes-rag-bridge:
+    owner: tcc-knowledge
+    placement: slicklab-vps
+    desired_replicas: 1
+    critical: true
+  browser-controller:
+    owner: tcc-browser
+    placement: slicklab-vps
+    desired_replicas: 1
+    critical: false
+  rea-worker:
+    owner: tcc-software-intelligence
+    placement: worker-only
+    desired_replicas: 0
+    critical: false

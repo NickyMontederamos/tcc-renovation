@@ -1,0 +1,14 @@
+machines:
+  slicklab-vps:
+    role: [control-plane, database, web]
+    scheduling_enabled: false
+    prohibited_capabilities: [unknown-binary-execution, heavy-rea, large-local-model]
+  goldenlegacy:
+    role: [compute, browser, coding, rea, inference]
+    scheduling_enabled: false
+  bobsicles:
+    role: [compute, verification, browser, coding, rea, inference]
+    scheduling_enabled: false
+  o9yown:
+    role: [unclassified]
+    scheduling_enabled: false
