@@ -2,6 +2,12 @@
 
 Safe, phased renovation of the SlickLab control plane, Hermes/COLNEX runtime, distributed workers, governed MCP fabric, evidence ledger, REA capability, observability, backup, and security controls.
 
+## Ownership
+
+The infrastructure architecture and all intellectual property in this repository are owned by **SlickLab.Digital**. Proprietary — all rights reserved. See [`LICENSE`](../LICENSE). Niccolo (Nicole) Montederamos is the final human authority on behalf of SlickLab.Digital.
+
+Copyright © 2026 SlickLab.Digital.
+
 ## Authority
 
 1. Niccolo is the final human authority.

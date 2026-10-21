@@ -1,0 +1,38 @@
+SlickLab.Digital Proprietary License
+
+Copyright (c) 2026 SlickLab.Digital. All rights reserved.
+
+The SlickLab TCC (Total Control Center) renovation — including its
+infrastructure architecture, control-plane and worker topology, governance
+model, phased implementation plan, execution contract, policies, schemas,
+acceptance tests, rollback runbooks, scripts, and all accompanying
+documentation in this repository (the "Work") — is the exclusive property of
+SlickLab.Digital.
+
+OWNERSHIP
+
+The infrastructure architecture and all intellectual property embodied in the
+Work are owned by SlickLab.Digital. Niccolo (Nicole) Montederamos is the final
+human authority over the Work on behalf of SlickLab.Digital.
+
+GRANT
+
+No license, right, or interest in the Work is granted, express or implied,
+except by a separate written agreement signed by SlickLab.Digital. Absent such
+an agreement, no person or entity may copy, modify, merge, publish, distribute,
+sublicense, sell, deploy, or create derivative works of the Work, in whole or
+in part.
+
+PERMITTED INTERNAL USE
+
+SlickLab.Digital and its authorized agents may use, modify, and execute the
+Work internally to operate and renovate SlickLab infrastructure, subject to the
+controls defined in CLAUDE.md and the governing ADRs.
+
+NO WARRANTY
+
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL SLICKLAB.DIGITAL BE
+LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM, OUT OF, OR IN
+CONNECTION WITH THE WORK OR ITS USE.
