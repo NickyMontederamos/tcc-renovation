@@ -1,0 +1,36 @@
+# Gitleaks configuration for the SlickLab TCC renovation contract repo.
+# Satisfies the P0 exit gate: "Secret scan finds no committed credentials."
+# Run:  gitleaks detect --no-banner --redact -c tcc-renovation/.gitleaks.toml
+title = "SlickLab TCC Renovation"
+
+[extend]
+# Start from the maintained default rule set, then add/allow below.
+useDefault = true
+
+[[rules]]
+id = "telegram-bot-token"
+description = "Telegram bot token"
+regex = '''[0-9]{8,10}:[A-Za-z0-9_-]{35}'''
+tags = ["telegram", "token"]
+
+[[rules]]
+id = "slicklab-identity-token"
+description = "SlickLab/TCC identity or bridge token"
+regex = '''(?i)(tcc|colnex|hermes|mcp)[-_]?(bridge[-_]?)?token["']?\s*[:=]\s*["']?[A-Za-z0-9._-]{20,}'''
+tags = ["slicklab", "token"]
+
+[allowlist]
+description = "Fingerprints, hashes and placeholders are intentional and are not secrets"
+# SHA-256 hashes referenced in README/ADR are evidence fingerprints, never secret values.
+regexes = [
+  '''sha256[:=]?\s*[0-9a-f]{64}''',
+  '''<[A-Z_]+>''',                       # template placeholders like <POSTGRES_USER>
+  '''fingerprint''',
+]
+# Paths that only ever contain references/fingerprints, not values.
+paths = [
+  '''docs/evidence/.*\.md''',
+  '''docs/adr/.*\.md''',
+  '''README\.md''',
+  '''CLAUDE\.md''',
+]

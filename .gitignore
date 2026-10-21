@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Secrets — never commit (fail-safe; Gitleaks is the second gate)
+*.env
+.env
+.env.*
+*token*.env
+*identity*.env
+secrets/
+id_rsa
+id_ed25519
+*.pem
+*.key
+
+# Raw evidence & backups live OFF Git (per ACCEPTANCE_TESTS execution rules)
+raw/
+backups/
+*.dump
+*.sql
+*.sql.gz
+# ...but the versioned, reviewed TCC schema migrations are part of the contract:
+!tcc-renovation/schemas/sql/*.sql
+*.tgz
+*.db
+evidence-raw/
+
+# OS / editor
+.DS_Store
+*.swp
